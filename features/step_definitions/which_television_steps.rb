@@ -32,13 +32,36 @@ And(/^I open the first tv in the list$/) do
 end
 
 Then(/^I can see the price of the tv$/) do
-  pricetext = @driver.find_element(css: 'div._3IV0A:nth-child(4) > div:nth-child(2) > div:nth-child(1) > p:nth-child(2) > span:nth-child(1)').text
+  pricetext = @driver.find_element(class: 'SWBi6').text
   if not pricetext[0] == '£'
     raise "Error, price for tv not found"
   end
 end
 
+And(/^I can click on the retailer link$/) do
+  @driver.find_element(class: '_3ac5f').click
+end
 
+Then(/^I can see the tv price comparisons$/) do
+  if not @driver.find_element(id: 'retailers').displayed?
+    raise "Error retail prices for selected tv not found"
+  end
+end
+
+And(/^I can set the minimum price to £1000$/) do
+  @driver.find_element(class:'_3e5kg').click
+  @driver.find_element(css: '#from > option:nth-child(11)').click
+end
+
+Then(/^all the tvs displayed cost more than £1000$/) do
+  sleep(2)
+  elements = @driver.find_elements(class: '_3iJwn')
+  elements.each do |x|
+    if x.text.length < 9
+      raise "Error, price " + x.text.length + " is less than £1000"
+    end
+  end
+end
 
 After do |scenario|
   if scenario.failed?
