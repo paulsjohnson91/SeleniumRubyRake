@@ -20,8 +20,10 @@ Then(/^only tvs with a size between 47 and 50 inches are displayed$/) do
       raise "Error, was not expecting a tv of size " + x.text + " in the filtered results"
     end
   end
-  if not @driver.current_url.equal? "http://www.which.co.uk/reviews/televisions?search[range][screen_size][Screen_size][]=47-51&sortby=testing_date_desc&page=1"
-    raise "Error, url was supposted to be: \n http://www.which.co.uk/reviews/televisions?search[range][screen_size][Screen_size][]=47-51&sortby=testing_date_desc&page=1" + "\nbut came back as:\n" + @driver.current_url
+  currenturl =  @driver.current_url
+  expected = "http://www.which.co.uk/reviews/televisions?search[range][screen_size][Screen_size][]=47-51&sortby=testing_date_desc&page=1"
+  if not currenturl == expected
+    raise "Error, url was supposted to be: \nhttp://www.which.co.uk/reviews/televisions?search[range][screen_size][Screen_size][]=47-51&sortby=testing_date_desc&page=1" + "\nbut came back as:\n" + @driver.current_url
   end
 end
 
@@ -29,9 +31,11 @@ And(/^I open the first tv in the list$/) do
   @driver.find_element(css: 'li._3M9TC:nth-child(2) > div:nth-child(1) > a:nth-child(1) > div:nth-child(3) > p:nth-child(1)').click
 end
 
-Then() do
-  price = @driver.find_element(css: 'div._3IV0A:nth-child(4) > div:nth-child(2) > div:nth-child(1) > p:nth-child(2) > span:nth-child(1)').text
-
+Then(/^I can see the price of the tv$/) do
+  pricetext = @driver.find_element(css: 'div._3IV0A:nth-child(4) > div:nth-child(2) > div:nth-child(1) > p:nth-child(2) > span:nth-child(1)').text
+  if not pricetext[0] == '£'
+    raise "Error, price for tv not found"
+  end
 end
 
 
