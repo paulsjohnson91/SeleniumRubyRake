@@ -16,3 +16,5 @@ To run the tests:
 ## Usage
 
 Please note, this has been tested on linux
+
+Output html report is in the log directory
